@@ -1,0 +1,25 @@
+:root {
+
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  *{
+    box-sizing: border-box;
+  }
+
+}
+
+
+body {
+  margin: 0;
+  background-size: 42px 42px;
+  background-position: center;
+  background-image:
+  linear-gradient(to right, #333 1px, transparent 1px),
+  linear-gradient(to bottom, #333 1px, transparent 1px);
+}
