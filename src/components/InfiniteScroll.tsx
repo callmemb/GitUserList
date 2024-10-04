@@ -3,17 +3,26 @@ import { ReactNode, useRef } from "react";
 
 import InfiniteScroller from "react-infinite-scroller";
 
-type Props = {
+
+/**
+ * Komponent doładowuje nową zawartość na bazie pozycji 'scrolla'.
+ */
+
+type InfiniteScrollProps = {
   getMore: () => void;
   hasMore: boolean;
   children: ReactNode;
 };
 
-export default function InfiniteScroll({ getMore, hasMore, children }: Props) {
+export default function InfiniteScroll({
+  getMore,
+  hasMore,
+  children,
+}: InfiniteScrollProps) {
   const scrollableBox = useRef();
 
   return (
-    <Box ref={scrollableBox} sx={{ flex: 1, overflowY: "scroll" }}>
+    <Box ref={scrollableBox} sx={{ flex: 1, overflowY: "auto" }}>
       <InfiniteScroller
         useWindow={false}
         loadMore={() => getMore()}

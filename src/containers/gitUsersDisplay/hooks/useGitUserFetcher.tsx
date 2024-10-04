@@ -1,17 +1,35 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 
 const usersPerPage = 50;
-const getGitUsersSearchUrl = (searchValue: string, pageNumber: number) =>
-  `https://api.github.com/search/users?q=${searchValue}&page=${pageNumber}&per_page=${usersPerPage}`;
+const getGitUsersSearchUrl = (searchValue: string, pageNumber: number) => {
+  const params = {
+    page: `${pageNumber}`,
+    per_page: `${usersPerPage}`,
+    ...(searchValue ? { q: searchValue } : {}),
+  };
 
+  return `https://api.github.com/search/users?${new URLSearchParams(
+    params
+  ).toString()}`;
+};
 
+export type GitUserType = {
+  id: string;
+  login: string;
+  avatar_url: string;
+};
 
 export default function useGitUserFetcher(searchValue: string) {
   const { data, error, isFetching, fetchNextPage, hasNextPage } =
     useInfiniteQuery({
-      queryKey: ["gitUsers", searchValue],
+      queryKey: ["gitUsers", searchValue ],
       queryFn: async ({ pageParam }) => {
         const pageNumber = pageParam;
+        if(!searchValue){
+          return {
+            pages:[]
+          }
+        }
         return fetch(getGitUsersSearchUrl(searchValue, pageParam))
           .then((resp) => {
             if (resp.ok) {
@@ -32,7 +50,8 @@ export default function useGitUserFetcher(searchValue: string) {
       },
     });
 
-  const users = data?.pages?.flatMap((d) => d.items || []) || [];
+  const users = (data?.pages?.flatMap((d) => d.items || []) ||
+    []) as GitUserType[];
   const hasMore = !isFetching && hasNextPage;
 
   return {

@@ -1,8 +1,10 @@
 import { Alert, Box } from "@mui/material";
 import useGitUserFetcher from "./hooks/useGitUserFetcher";
 import useSearchInputBuilder from "./hooks/useSearchInputBuilder";
-import UserList from "./components/UserList";
-import InfiniteScroll from "./components/InfiniteScroll";
+import InfiniteScroll from "../../components/InfiniteScroll";
+import LoadingList from "../../components/LoadingList";
+import UserListItem from "./components/UserListItem";
+import UserSkeleton from "./components/UserSkeleton";
 
 export default function GitUsersDisplay() {
   const { inputNode, inputValue } = useSearchInputBuilder();
@@ -19,12 +21,24 @@ export default function GitUsersDisplay() {
         overflowY: "clip",
       }}
     >
-      <Box sx={{ width: "100%", padding: "1rem" }}>{inputNode}</Box>
+      <Box sx={{ width: "100%", padding: ".5rem .5rem 1rem" }}>{inputNode}</Box>
 
-      {error ? <Alert severity="error">{`${error}`}</Alert> : null}
+      {error ? (
+        <Alert sx={{ margin: "1rem" }} severity="error">{`${error}`}</Alert>
+      ) : null}
 
       <InfiniteScroll getMore={getMore} hasMore={hasMore}>
-        <UserList users={users} isLoading={isLoading} />
+        {/** LoadingList
+         * Ciekawa (i użyteczna) technika
+         * związaną z programowaniem funkcyjnym
+         **/}
+        <LoadingList
+          list={users}
+          isLoading={isLoading}
+          itemRender={(user) => <UserListItem key={user.id} data={user} />}
+          noResultsRender={"No Result"}
+          loadingRender={<UserSkeleton />}
+        />
       </InfiniteScroll>
     </Box>
   );
