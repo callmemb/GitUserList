@@ -52,6 +52,7 @@ export default function useSearchInputBuilder() {
 
   const searchNode = (
     <form
+      role="search"
       onSubmit={handleSubmit(handleSearch)}
       onBlur={fieldErrorMsg ? undefined : handleSubmit(handleSearch)}
     >
